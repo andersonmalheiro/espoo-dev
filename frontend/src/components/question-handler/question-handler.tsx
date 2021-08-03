@@ -24,7 +24,7 @@ export const QuestionHandler = (props: QuestionHandlerProps) => {
 
   return (
     <Flex direction="column" alignItems="center" h="full" w="full">
-      <Text color="white">{name}</Text>
+      <Text color="white" marginBottom={4}>{name}</Text>
       {getQuestionType()}
     </Flex>
   );

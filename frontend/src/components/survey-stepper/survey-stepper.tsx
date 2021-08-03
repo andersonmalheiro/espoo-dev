@@ -64,8 +64,8 @@ export const SurveyStepper = (props: SurveyStepperProps) => {
                 color="white"
                 key={randomId()}
                 borderRadius="50%"
-                h="20px"
-                w="20px"
+                h="25px"
+                w="25px"
                 p={0}
                 _selected={{
                   color: 'teal.400',
@@ -79,7 +79,7 @@ export const SurveyStepper = (props: SurveyStepperProps) => {
               </Tab>
             ))}
           </TabList>
-          <TabPanels>
+          <TabPanels my={4}>
             {questions?.map((question) => (
               <TabPanel key={randomId()}>
                 <QuestionHandler key={question?.id} question={question} />
