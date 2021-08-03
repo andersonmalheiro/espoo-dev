@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Button, Flex, SimpleGrid, Text } from '@chakra-ui/react';
 import { QuestionOption } from '@api/models/survey';
+import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
 
 interface ExtendedOption extends QuestionOption {
   selected?: boolean;
 }
 
-interface SingleChoiceProps {
+interface MultiChoiceProps {
   /**
    * options to render
    */
@@ -15,11 +16,11 @@ interface SingleChoiceProps {
 
 type StringOrNumber = string | number;
 
-export const MultiChoice = (props: SingleChoiceProps) => {
+export const MultiChoice = (props: MultiChoiceProps) => {
   const [values, setValues] = useState<StringOrNumber[]>([]);
   const [options, setOptions] = useState<ExtendedOption[]>([]);
 
-  const handleChange = useCallback((option: ExtendedOption) => {
+  const handleSelection = useCallback((option: ExtendedOption) => {
     const { id } = option;
 
     setOptions((prev) =>
@@ -35,18 +36,6 @@ export const MultiChoice = (props: SingleChoiceProps) => {
     );
   }, []);
 
-  const getOptionBG = (option: ExtendedOption) => {
-    if (option?.selected && option?.correct) {
-      return 'green.100';
-    }
-
-    if (option?.selected && !option?.correct) {
-      return 'red.100';
-    }
-
-    return 'white';
-  };
-
   useEffect(() => {
     const { options: originalOptions } = props;
 
@@ -59,12 +48,16 @@ export const MultiChoice = (props: SingleChoiceProps) => {
   }, []);
 
   useEffect(() => {
-    if (options.some((opt) => opt.selected)) {
+    const someSelected = options.some((opt) => opt.selected);
+
+    if (someSelected) {
       const filteredValues = options
         .filter((opt) => opt.selected)
         .map((opt) => opt.id);
 
       setValues(filteredValues);
+    } else {
+      setValues([]);
     }
   }, [options]);
 
@@ -73,19 +66,19 @@ export const MultiChoice = (props: SingleChoiceProps) => {
   }, [values]);
 
   return (
-    <Flex
+    <SimpleGrid
       alignItems="center"
       justifyContent="center"
       w="full"
-      flexWrap="wrap"
-      style={{ gap: '10px' }}
+      minChildWidth="300px"
+      gap="10px"
     >
       {options.map((item) => (
         <Button
-          onClick={() => handleChange(item)}
+          onClick={() => handleSelection(item)}
           type="button"
           rounded="md"
-          bg={getOptionBG(item)}
+          bg="white"
           p={4}
           key={item?.id}
           flex="1"
@@ -96,9 +89,18 @@ export const MultiChoice = (props: SingleChoiceProps) => {
             transition: 'all 0.3s ease-in-out',
           }}
         >
-          <Text color="black">{item?.name}</Text>
+          <Flex alignItems="center" flex="1" style={{ gap: '10px' }}>
+            <Text color="black" flex="1">
+              {item?.name}
+            </Text>
+            {item?.selected ? (
+              <MdCheckBox size={20} color="#319795" />
+            ) : (
+              <MdCheckBoxOutlineBlank size={20} color="#333" />
+            )}
+          </Flex>
         </Button>
       ))}
-    </Flex>
+    </SimpleGrid>
   );
 };
