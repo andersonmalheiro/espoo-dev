@@ -1,4 +1,4 @@
-import { errorHandler } from 'api/error-handler';
+import { errorHandler } from '@api/error-handler';
 import { Survey } from 'api/models/survey';
 import { AxiosInstance, AxiosResponse } from 'axios';
 
@@ -13,7 +13,9 @@ export class SurveyService {
         params: {},
       });
 
-      return response;
+      if (response) {
+        return response;
+      }
     } catch (error) {
       errorHandler(error);
     }
@@ -30,7 +32,9 @@ export class SurveyService {
         }
       );
 
-      return response;
+      if (response) {
+        return response;
+      }
     } catch (error) {
       errorHandler(error);
     }
